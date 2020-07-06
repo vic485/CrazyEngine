@@ -11,3 +11,5 @@ crate-type = ["cdylib"]
 gl = "0.14"
 
 lazy_static = "1.4.0"
+
+photic = { path = "../photic" }
