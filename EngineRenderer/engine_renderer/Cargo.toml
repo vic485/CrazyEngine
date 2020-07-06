@@ -1,0 +1,13 @@
+[package]
+name = "cs_dll_test"
+version = "0.1.0"
+authors = ["Luuk van Oijen <lazyluuk.channel@gmail.com>"]
+edition = "2018"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+gl = "0.14"
+
+lazy_static = "1.4.0"
