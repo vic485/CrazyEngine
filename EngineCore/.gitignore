@@ -1,0 +1,10 @@
+﻿# Editor cache
+.idea/
+.vs/
+.vscode/
+
+# Build
+bin/
+obj/
+
+*.dll
