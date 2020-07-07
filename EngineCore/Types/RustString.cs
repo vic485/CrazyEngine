@@ -15,8 +15,12 @@ namespace EngineCore.Types
         private static extern void CleanupString(IntPtr stringPtr);
 
         #endregion
-        
+
         public RustString() : base(IntPtr.Zero, true)
+        {
+        }
+
+        public RustString(IntPtr handle) : base(handle, true)
         {
         }
 
@@ -33,7 +37,7 @@ namespace EngineCore.Types
                 ++len;
 
             var buffer = new byte[len];
-            Marshal.Copy(handle,buffer,0,buffer.Length);
+            Marshal.Copy(handle, buffer, 0, buffer.Length);
             return Encoding.UTF8.GetString(buffer);
         }
 
