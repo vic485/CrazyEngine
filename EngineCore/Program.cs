@@ -22,7 +22,7 @@ namespace EngineCore
             _mainWindow.Dispose();
         }
 
-        [DllImport("EngineRenderer.dll", EntryPoint = "test_render", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("EngineRenderer", EntryPoint = "test_render", CallingConvention = CallingConvention.Cdecl)]
         private static extern void TestRender();
     }
 }

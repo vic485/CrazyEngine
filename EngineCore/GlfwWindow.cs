@@ -47,7 +47,8 @@ namespace EngineCore
             RendererDelegate rDel = GetGlProc;
             var ptr = Marshal.GetFunctionPointerForDelegate(rDel);
             RegisterRenderer(ptr);
-            CreateRenderer();
+            //CreateRenderer();
+            Initialize((uint) _window.ClientSize.Width, (uint) _window.ClientSize.Height);
         }
         
         private delegate IntPtr RendererDelegate(IntPtr s);
@@ -59,11 +60,14 @@ namespace EngineCore
 
         #region Renderer Methods
 
-        [DllImport("EngineRenderer.dll", EntryPoint = "create_gl_load_callback", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("EngineRenderer", EntryPoint = "create_gl_load_callback", CallingConvention = CallingConvention.Cdecl)]
         private static extern int RegisterRenderer(IntPtr funcPtr);
+        
+        [DllImport("EngineRenderer", EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]
+        private static extern X3dBinding Initialize(uint x, uint y);
 
-        [DllImport("EngineRenderer.dll", EntryPoint = "gl_callback", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void CreateRenderer();
+        /*[DllImport("EngineRenderer", EntryPoint = "gl_callback", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void CreateRenderer();*/
 
         #endregion
     }
