@@ -1,5 +1,5 @@
 [package]
-name = "cs_dll_test"
+name = "engine_renderer"
 version = "0.1.0"
 authors = ["Luuk van Oijen <lazyluuk.channel@gmail.com>"]
 edition = "2018"
