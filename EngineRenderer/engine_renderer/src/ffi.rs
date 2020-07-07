@@ -3,6 +3,12 @@ use std::error::Error;
 use std::os::raw::{c_int, c_char};
 use std::ffi::CString;
 
+//NOTE: Error handling is done by returning an std::ptr::null_mut
+//      instead of a proper pointer to something.
+//      Therefore, you must always check for an error before using
+//      a return from a function, if the function can error.
+//      Check with `last_error_message`.
+
 thread_local!{
     static LAST_ERROR: RefCell<Option<(Box<dyn Error>, i32)>> = RefCell::new(None);
 }
