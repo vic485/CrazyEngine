@@ -40,7 +40,7 @@ pub extern "C" fn test(sc: *mut RustCallback) -> u32 {
 
 #[no_mangle]
 pub extern "C" fn test_string() -> *mut c_char {
-    let c_str = CString::new("piss").expect("0 byte detected in middle of string!");
+    let c_str = CString::new("test").expect("0 byte detected in middle of string!");
     c_str.into_raw()
 }
 

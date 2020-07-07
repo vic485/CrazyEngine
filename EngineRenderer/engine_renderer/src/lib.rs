@@ -5,6 +5,7 @@ use std::boxed::Box;
 use std::os::raw::{c_char, c_void};
 use std::sync::Mutex;
 
+pub mod ffi;
 pub mod photic_binding;
 
 type TestCallback = extern "stdcall" fn(i32);
@@ -35,6 +36,22 @@ pub extern "C" fn string_cleanup(s: *mut c_char) {
 
         CString::from_raw(s)
     };
+}
+
+#[derive(Debug, Default)]
+struct TestError;
+
+impl std::fmt::Display for TestError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "Test error!")
+    }
+}
+
+impl std::error::Error for TestError {}
+
+#[no_mangle]
+pub extern "C" fn error_handling_test() {
+    ffi::update_last_error(TestError::default(), 1);
 }
 
 //Can't mangle generic functions

@@ -13,6 +13,12 @@ namespace EngineCore
         {
             _mainWindow = new GlfwWindow();
 
+            TestError();
+
+            RustError err = LastErrorMessage();
+            RustString message = new RustString(err.message);
+            Console.WriteLine(message.AsString());
+
             while (!_mainWindow.Closed())
             {
                 // TestRender();
@@ -22,7 +28,10 @@ namespace EngineCore
             _mainWindow.Dispose();
         }
 
-        // [DllImport("EngineRenderer", EntryPoint = "test_render", CallingConvention = CallingConvention.Cdecl)]
-        // private static extern void TestRender();
+        [DllImport("EngineRenderer", EntryPoint = "error_handling_test", CallingConvention = CallingConvention.Cdecl)]
+        private static extern void TestError();
+
+        [DllImport("EngineRenderer", EntryPoint = "last_error_message", CallingConvention = CallingConvention.Cdecl)]
+        private static extern RustError LastErrorMessage();
     }
 }

@@ -54,7 +54,8 @@ impl<'a> Renderer3D<'a> {
 
     pub fn prepare_frame(&mut self, gl: &glow::Context) {
         unsafe {
-            gl.clear(glow::DEPTH_BUFFER_BIT);
+            gl.clear(glow::COLOR_BUFFER_BIT | glow::DEPTH_BUFFER_BIT);
+            gl.clear_color(127.0 / 255.0, 103.0 / 255.0, 181.0 / 255.0, 1.0);
         }
         self.vert_count = 0;
     }
