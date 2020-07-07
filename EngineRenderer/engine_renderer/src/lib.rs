@@ -53,7 +53,6 @@ pub extern "C" fn create_test_callback(callback: TestCallback, sc: *mut *mut Rus
     0
 }
 
-
 #[no_mangle]
 pub extern "C" fn test_callback(sc: *mut RustCallback<TestCallback>) -> u32 {
     let callback = unsafe { sc.as_mut().unwrap() };
