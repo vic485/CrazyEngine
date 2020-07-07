@@ -15,14 +15,14 @@ namespace EngineCore
 
             while (!_mainWindow.Closed())
             {
-                TestRender();
+                // TestRender();
                 _mainWindow.Update();
             }
-            
+
             _mainWindow.Dispose();
         }
 
-        [DllImport("EngineRenderer", EntryPoint = "test_render", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void TestRender();
+        // [DllImport("EngineRenderer", EntryPoint = "test_render", CallingConvention = CallingConvention.Cdecl)]
+        // private static extern void TestRender();
     }
 }

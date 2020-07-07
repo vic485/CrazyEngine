@@ -29,8 +29,7 @@ use cgmath::*;
 use std::ops::Deref;
 use std::sync::atomic::Ordering;
 
-pub struct Renderer3D<'a, T: IsMaterial> {
-    pub meshes: Vec<(&'a RenderMesh, T, Matrix4<f32>)>,
+pub struct Renderer3D<'a> {
     pub mesh_count: usize,
     pub vert_count: usize,
 
@@ -40,10 +39,9 @@ pub struct Renderer3D<'a, T: IsMaterial> {
     pub render_state: RenderState,
 }
 
-impl<'a, T: IsMaterial> Renderer3D<'a, T> {
+impl<'a> Renderer3D<'a> {
     pub fn new() -> Self {
         Self {
-            meshes: Vec::new(),
             mesh_count: 0,
             vert_count: 0,
 
@@ -61,44 +59,7 @@ impl<'a, T: IsMaterial> Renderer3D<'a, T> {
         self.vert_count = 0;
     }
 
-    pub fn finish_frame(&mut self, surface: &mut crate::surface::Surface, gl: &glow::Context, camera: &dyn IsCamera) {
-        let back_buffer = surface.back_buffer().expect("Couldn't get the backbuffer!");
-
-        let projection = camera.get_proj(surface.width(), surface.height());
-        let view = camera.get_view();
-
-        surface.pipeline_builder().pipeline(
-            &back_buffer,
-            &PipelineState::default(),
-            |_, mut shd_gate| {
-                for mesh in &self.meshes {
-                    mesh.1.bind_texture(gl);
-                    shd_gate.shade(&mesh.1.program(), |iface, mut rdr_gate| {
-                        let handle = mesh.1.program().deref().handle();
-
-                        for light in &self.lights {
-                            light.upload_fields(gl, handle);
-                        }
-
-                        camera.upload_fields(gl, handle);
-                        iface.projection.update(projection.into());
-                        iface.view.update(view.into());
-                        mesh.1.upload_fields(gl);
-
-                        rdr_gate.render(&self.render_state, |mut tess_gate| {
-                            iface.model.update(mesh.2.into()); //tc = transform component
-                            tess_gate.render(mesh.0.tess.slice(..))
-                        })
-                    });
-                    unsafe { gl.bind_texture(glow::TEXTURE_2D, None); }
-                }
-            }
-        );
-
-        self.mesh_count = self.meshes.len();
-
-        self.meshes = Vec::new();
-
+    pub fn finish_frame(&mut self) {
         //TODO: Optimise this, no need to loop through every light to reset lol
         for light in &self.lights {
             light.count_ref().store(0, Ordering::Relaxed);
@@ -108,12 +69,43 @@ impl<'a, T: IsMaterial> Renderer3D<'a, T> {
         self.lights = Vec::new();
     }
 
+    //Function really only used internally, as it's quite unintuitive lol
     pub fn use_light(&mut self, light: &'a dyn IsLight) {
         self.lights.push(light);
     }
 
-    pub fn draw_mesh(&mut self, mesh: &'a RenderMesh, material: T, model_matrix: Matrix4<f32>) {
-        self.meshes.push((mesh, material, model_matrix));
+    pub fn draw_mesh(&mut self, surface: &mut crate::surface::Surface, gl: &glow::Context, camera: &dyn IsCamera, mesh: &'a RenderMesh, material: Box<dyn IsMaterial + 'a>, model_matrix: Matrix4<f32>) {
+        let back_buffer = surface.back_buffer().expect("Couldn't get the backbuffer!");
+
+        let projection = camera.get_proj(surface.width(), surface.height());
+        let view = camera.get_view();
+
+        surface.pipeline_builder().pipeline(
+            &back_buffer,
+            &PipelineState::default(),
+            |_, mut shd_gate| {
+                material.bind_texture(gl);
+                shd_gate.shade(&material.program(), |iface, mut rdr_gate| {
+                    let handle = material.program().deref().handle();
+
+                    for light in &self.lights {
+                        light.upload_fields(gl, handle);
+                    }
+
+                    camera.upload_fields(gl, handle);
+                    iface.projection.update(projection.into());
+                    iface.view.update(view.into());
+                    material.upload_fields(gl);
+
+                    rdr_gate.render(&self.render_state, |mut tess_gate| {
+                        iface.model.update(model_matrix.into()); //tc = transform component
+                        tess_gate.render(mesh.tess.slice(..))
+                    })
+                });
+                unsafe { gl.bind_texture(glow::TEXTURE_2D, None); }
+            }
+        );
+
         self.vert_count += mesh.vert_count;
     }
 }

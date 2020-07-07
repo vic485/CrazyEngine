@@ -12,6 +12,8 @@ namespace EngineCore
     {
         private readonly NativeWindow _window;
 
+        private X3DRenderer renderer;
+
         public GlfwWindow(int width = 1280, int height = 720, string title = "whaddafrig")
         {
             if (!Glfw.Init())
@@ -20,12 +22,12 @@ namespace EngineCore
                 Console.WriteLine("Failed to initialize GLFW!");
                 Environment.Exit(0);
             }
-            
+
             // TODO: Window hints
             _window = new NativeWindow(width, height, title);
             _window.CenterOnScreen();
             Glfw.MakeContextCurrent(_window);
-            
+
             SetupRenderer();
         }
 
@@ -33,6 +35,7 @@ namespace EngineCore
 
         public void Update()
         {
+            renderer.PrepareFrame();
             _window.SwapBuffers();
             Glfw.PollEvents();
         }
@@ -48,11 +51,12 @@ namespace EngineCore
             var ptr = Marshal.GetFunctionPointerForDelegate(rDel);
             RegisterRenderer(ptr);
             //CreateRenderer();
-            Initialize((uint) _window.ClientSize.Width, (uint) _window.ClientSize.Height);
+            //Initialize((uint) _window.ClientSize.Width, (uint) _window.ClientSize.Height);
+            renderer = new X3DRenderer((uint) _window.ClientSize.Width, (uint) _window.ClientSize.Height);
         }
-        
+
         private delegate IntPtr RendererDelegate(IntPtr s);
-        
+
         private static IntPtr GetGlProc(IntPtr s)
         {
             return Glfw.GetProcAddress(new RustString(s).AsString());
@@ -62,9 +66,9 @@ namespace EngineCore
 
         [DllImport("EngineRenderer", EntryPoint = "create_gl_load_callback", CallingConvention = CallingConvention.Cdecl)]
         private static extern int RegisterRenderer(IntPtr funcPtr);
-        
-        [DllImport("EngineRenderer", EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]
-        private static extern X3dBinding Initialize(uint x, uint y);
+
+        // [DllImport("EngineRenderer", EntryPoint = "initialize", CallingConvention = CallingConvention.Cdecl)]
+        // private static extern X3dBinding Initialize(uint x, uint y);
 
         /*[DllImport("EngineRenderer", EntryPoint = "gl_callback", CallingConvention = CallingConvention.Cdecl)]
         private static extern void CreateRenderer();*/

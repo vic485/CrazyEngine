@@ -6,9 +6,6 @@ use std::os::raw::{c_char, c_void};
 use std::sync::Mutex;
 
 pub mod photic_binding;
-use photic_binding::{
-    x3d_binding::X3D_Binding,
-};
 
 type TestCallback = extern "stdcall" fn(i32);
 type GlLoadCallback = extern "stdcall" fn(*mut c_char) -> *mut i32;
@@ -75,23 +72,23 @@ pub extern "C" fn create_gl_load_callback(callback: GlLoadCallback) -> u32 {
     0
 }
 
-#[no_mangle]
-pub extern "C" fn initialize(size_x: u32, size_y: u32) -> Option<X3D_Binding> {
-    gl_callback();
-    let surface = match photic::surface::Surface::new((size_x, size_y)) {
-        Ok(surface) => surface,
-        Err(why) => {
-            println!("Failed to create rendering surface! Reason: {}", why);
-            return None;
-        }
-    };
+// #[no_mangle]
+// pub extern "C" fn initialize(size_x: u32, size_y: u32) -> Option<X3D_Binding> {
+//     gl_callback();
+//     let surface = match photic::surface::Surface::new((size_x, size_y)) {
+//         Ok(surface) => surface,
+//         Err(why) => {
+//             println!("Failed to create rendering surface! Reason: {}", why);
+//             return None;
+//         }
+//     };
+//
+//     Some(X3D_Binding {
+//         surface: surface,
+//     })
+// }
 
-    Some(X3D_Binding {
-        surface: surface,
-    })
-}
-
-pub fn gl_callback() {
+pub fn gl_callback() -> glow::Context {
     let guard = GL_LOAD_CALLBACK.lock().unwrap();
     match &*guard {
         Some(sc) => {
@@ -101,9 +98,14 @@ pub fn gl_callback() {
                 let proc = CString::new(s).unwrap(); //We know this string won't error
                 proc_func(proc.into_raw()) as _
             });
+            glow::Context::from_loader_function(|s| {
+                let proc = CString::new(s).unwrap(); //We know this string won't error
+                proc_func(proc.into_raw()) as _
+            })
         },
         None => {
             println!("Callback does not exist!");
+            panic!("Failed to load OpenGL!"); //Technically undefined behaviour but uhhhhhh
         },
     }
 }
