@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 using EngineCore.Types;
 using GLFW;
@@ -34,7 +34,8 @@ namespace EngineCore
 
         private static IntPtr GetGlProc(IntPtr s)
         {
-            var rs = new RustString().ChangeHandle(s);
+            //var rs = new RustString().ChangeHandle(s);
+            var rs = new RustString(s);
             var text = rs.AsString();
             //Console.WriteLine(text);
             var addr = Glfw.GetProcAddress(text);
