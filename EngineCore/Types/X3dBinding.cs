@@ -3,13 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace EngineCore.Types
 {
-    // [StructLayout(LayoutKind.Sequential)]
-    // public struct X3dBinding
-    // {
-    //     public Surface surface;
-    // }
-
-    internal class X3DNative {
+    internal class X3DRendererNative {
         #region Dll Imports
 
         [DllImport("EngineRenderer.dll", EntryPoint = "x3d_drop_renderer", CallingConvention = CallingConvention.Cdecl)]
@@ -23,7 +17,7 @@ namespace EngineCore.Types
     }
 
     /// <summary>
-    /// A handle to the raw rust object sent through FFI
+    /// A handle to the raw rust renderer object sent through FFI
     /// </summary>
     public class X3DRendererHandle : SafeHandle
     {
@@ -38,7 +32,7 @@ namespace EngineCore.Types
         {
             if (!this.IsInvalid)
             {
-                X3DNative.CleanupX3DRenderer(handle);
+                X3DRendererNative.CleanupX3DRenderer(handle);
             }
 
             return true;
@@ -54,17 +48,21 @@ namespace EngineCore.Types
 
         public X3DRenderer(uint width, uint height)
         {
-            db = X3DNative.CreateX3DRenderer(width, height);
+            db = X3DRendererNative.CreateX3DRenderer(width, height);
         }
 
         public void PrepareFrame()
         {
-            X3DNative.X3DRendererPrepareFrame(db);
+            X3DRendererNative.X3DRendererPrepareFrame(db);
         }
 
         public void Dispose()
         {
             db.Dispose();
+        }
+
+        public X3DRendererHandle GetHandle() {
+            return db;
         }
     }
 }

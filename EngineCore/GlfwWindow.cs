@@ -53,6 +53,9 @@ namespace EngineCore
             //CreateRenderer();
             //Initialize((uint) _window.ClientSize.Width, (uint) _window.ClientSize.Height);
             renderer = new X3DRenderer((uint) _window.ClientSize.Width, (uint) _window.ClientSize.Height);
+
+            //Quickly test the mesh
+            X3DMesh mesh = new X3DMesh(renderer);
         }
 
         private delegate IntPtr RendererDelegate(IntPtr s);
