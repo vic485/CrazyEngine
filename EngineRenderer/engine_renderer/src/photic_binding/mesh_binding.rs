@@ -92,3 +92,13 @@ pub extern "C" fn x3d_new_mesh<'a>(renderer_ptr: *mut X3DRenderer<'a>) -> *mut X
         }
     }
 }
+
+#[no_mangle]
+pub extern "C" fn x3d_drop_mesh(ptr: *mut X3DMesh) {
+    if ptr.is_null() {
+        return; //Invalid pointer, scary stuff
+    }
+    unsafe {
+        Box::from_raw(ptr);
+    }
+}
