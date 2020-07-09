@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using EngineCore.Types;
+using EngineCore.Types.Rust;
 using GLFW;
 
 namespace EngineCore
@@ -13,6 +13,8 @@ namespace EngineCore
         private readonly NativeWindow _window;
 
         private X3DRenderer renderer;
+
+        private X3DCamera cam;
         private X3DMesh mesh;
 
         public GlfwWindow(int width = 1280, int height = 720, string title = "whaddafrig")
@@ -38,7 +40,7 @@ namespace EngineCore
         {
             renderer.PrepareFrame();
 
-            renderer.DrawMesh(mesh);
+            renderer.DrawMesh(mesh, cam);
 
             renderer.FinishFrame();
 
@@ -62,6 +64,10 @@ namespace EngineCore
 
             //Quickly test the mesh
             mesh = new X3DMesh(renderer);
+            // cam = new X3DCamera();
+
+            Vector3 cam_pos = new Vector3(0.0f, 0.0f, 0.0f);
+            cam = new X3DCamera(60f, 0.02f, 100f, 16f, 1f / 100f, 100f, cam_pos);
         }
 
         private delegate IntPtr RendererDelegate(IntPtr s);

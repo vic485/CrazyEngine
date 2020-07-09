@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace EngineCore.Types
+namespace EngineCore.Types.Rust
 {
     internal class X3DRendererNative {
         #region Dll Imports
@@ -20,7 +20,7 @@ namespace EngineCore.Types
 
         /// Drawing
         [DllImport("EngineRenderer", EntryPoint = "x3d_renderer_draw_mesh", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void X3DRendererDrawMesh(X3DRendererHandle objPtr, X3DMeshHandle meshPtr);
+        public static extern void X3DRendererDrawMesh(X3DRendererHandle objPtr, X3DMeshHandle meshPtr, X3DCameraHandle camPtr);
 
         #endregion
     }
@@ -70,9 +70,9 @@ namespace EngineCore.Types
             X3DRendererNative.X3DRendererFinishFrame(db);
         }
 
-        public void DrawMesh(X3DMesh mesh)
+        public void DrawMesh(X3DMesh mesh, X3DCamera cam)
         {
-            X3DRendererNative.X3DRendererDrawMesh(db, mesh.GetHandle());
+            X3DRendererNative.X3DRendererDrawMesh(db, mesh.GetHandle(), cam.GetHandle());
         }
 
         public void Dispose()

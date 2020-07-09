@@ -2,6 +2,7 @@ use std::cell::RefCell;
 use std::rc::Rc;
 
 use super::mesh_binding::X3DMesh;
+use super::camera_binding::X3DCamera;
 
 use photic::{
     pipeline::{
@@ -41,8 +42,8 @@ impl<'a> X3DRenderer<'a> {
         self.renderer.borrow_mut().finish_frame();
     }
 
-    pub fn draw_mesh<T: IsMaterial>(&mut self, camera: &dyn IsCamera, mesh: &X3DMesh, material: T, model_matrix: Matrix4<f32>) {
-        self.renderer.borrow_mut().draw_mesh(&mut self.surface, &self.gl, camera, &mesh.mesh.borrow(), material, model_matrix);
+    pub fn draw_mesh<T: IsMaterial>(&mut self, camera: &X3DCamera, mesh: &X3DMesh, material: T, model_matrix: Matrix4<f32>) {
+        self.renderer.borrow_mut().draw_mesh(&mut self.surface, &self.gl, camera.camera, &mesh.mesh.borrow(), material, model_matrix);
     }
 }
 
@@ -92,7 +93,7 @@ pub extern "C" fn x3d_renderer_finish_frame(ptr: *mut X3DRenderer) {
 }
 
 #[no_mangle]
-pub extern "C" fn x3d_renderer_draw_mesh(rend_ptr: *mut X3DRenderer, mesh_ptr: *mut X3DMesh) {
+pub extern "C" fn x3d_renderer_draw_mesh(rend_ptr: *mut X3DRenderer, mesh_ptr: *mut X3DMesh, cam_ptr: *mut X3DCamera) {
     let mesh = unsafe {
         assert!(!mesh_ptr.is_null());
         &mut *mesh_ptr
@@ -102,7 +103,12 @@ pub extern "C" fn x3d_renderer_draw_mesh(rend_ptr: *mut X3DRenderer, mesh_ptr: *
         &mut *rend_ptr
     };
 
-    let camera = Camera::default();
+    // let camera = Camera::default();
+    let camera = unsafe {
+        assert!(!cam_ptr.is_null());
+        &mut *cam_ptr
+    };
+
     let shader_source = ShaderSource {
         vertex_shader: include_str!("../../../shaders/vertex.glsl").to_string(),
         geometry_shader: None,

@@ -10,6 +10,7 @@ pub trait IsCamera {
     fn upload_fields(&self, gl: &glow::Context, handle: GLuint);
 }
 
+#[derive(Copy, Clone)]
 pub struct Camera {
     pub fovy: f32,
     pub z_near: f32,

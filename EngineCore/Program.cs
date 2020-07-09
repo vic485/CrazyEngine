@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using EngineCore.Types;
+using EngineCore.Types.Rust;
 using EngineCore.Vfs;
 using GLFW;
 

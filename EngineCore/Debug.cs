@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Runtime.InteropServices;
-using EngineCore.Types;
+using EngineCore.Types.Rust;
 
 namespace EngineCore
 {

@@ -2,7 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Text;
 
-namespace EngineCore.Types
+namespace EngineCore.Types.Rust
 {
     /// <summary>
     /// Represents rust lang strings

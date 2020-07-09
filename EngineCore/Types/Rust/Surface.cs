@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace EngineCore.Types
+namespace EngineCore.Types.Rust
 {
     [StructLayout(LayoutKind.Sequential)]
     public struct Surface

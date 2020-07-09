@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace EngineCore.Types
+namespace EngineCore.Types.Rust
 {
     internal class X3DMeshNative {
         #region Dll Imports
