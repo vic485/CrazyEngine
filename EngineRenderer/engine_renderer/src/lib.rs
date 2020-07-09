@@ -1,4 +1,5 @@
 #[macro_use] extern crate lazy_static;
+#[macro_use] extern crate log;
 
 use std::ffi::CString;
 use std::boxed::Box;
@@ -109,7 +110,7 @@ pub fn gl_callback() -> glow::Context {
     let guard = GL_LOAD_CALLBACK.lock().unwrap();
     match &*guard {
         Some(sc) => {
-            println!("Callback exists!");
+            debug!("Callback exists!");
             let proc_func = sc.callback;
             gl::load_with(|s| {
                 let proc = CString::new(s).unwrap(); //We know this string won't error
@@ -121,7 +122,7 @@ pub fn gl_callback() -> glow::Context {
             })
         },
         None => {
-            println!("Callback does not exist!");
+            debug!("Callback does not exist!");
             panic!("Failed to load OpenGL!"); //Technically undefined behaviour but uhhhhhh
         },
     }
