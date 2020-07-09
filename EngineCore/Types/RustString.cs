@@ -50,5 +50,10 @@ namespace EngineCore.Types
         }
 
         public override bool IsInvalid => handle == IntPtr.Zero;
+
+        public override string ToString()
+        {
+            return AsString();
+        }
     }
 }

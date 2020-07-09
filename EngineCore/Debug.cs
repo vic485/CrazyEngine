@@ -31,7 +31,7 @@ namespace EngineCore
 
         public static void Log(object message)
         {
-            Console.WriteLine(message);
+            Console.WriteLine(message.ToString());
             WriteToFile(message.ToString());
         }
 
