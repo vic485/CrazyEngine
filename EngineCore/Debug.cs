@@ -5,6 +5,13 @@ using EngineCore.Types;
 
 namespace EngineCore
 {
+    [StructLayout(LayoutKind.Sequential)]
+    public struct RustLogMessage {
+        public int level;
+        public IntPtr message;
+        public IntPtr target;
+    }
+
     public static class Debug
     {
         public static readonly string _file;
@@ -22,11 +29,12 @@ namespace EngineCore
             RustLogDel del = RustLog;
             var ptr = Marshal.GetFunctionPointerForDelegate(del);
             // TODO: I was lazy
-            RegisterErrorMessage(ptr);
-            RegisterWarningMessage(ptr);
             RegisterLogMessage(ptr);
-            RegisterDebugMessage(ptr);
-            RegisterTraceMessage(ptr);
+            // RegisterErrorMessage(ptr);
+            // RegisterWarningMessage(ptr);
+            // RegisterLogMessage(ptr);
+            // RegisterDebugMessage(ptr);
+            // RegisterTraceMessage(ptr);
         }
 
         public static void Log(object message)
@@ -43,11 +51,13 @@ namespace EngineCore
 
         #region Delegates
 
-        private delegate void RustLogDel(IntPtr rs);
+        private delegate void RustLogDel(RustLogMessage rs);
 
-        private static void RustLog(IntPtr rs)
+        private static void RustLog(RustLogMessage rs)
         {
-            Log(new RustString(rs));
+            RustString message = new RustString(rs.message);
+            RustString target = new RustString(rs.target);
+            Log(target.ToString() + " > " + message.ToString());
         }
 
         #endregion
@@ -57,20 +67,8 @@ namespace EngineCore
         [DllImport("EngineRenderer", EntryPoint = "register_logger", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterLogger();
 
-        [DllImport("EngineRenderer", EntryPoint = "logger_register_error", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void RegisterErrorMessage(IntPtr funcPtr);
-
-        [DllImport("EngineRenderer", EntryPoint = "logger_register_warn", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void RegisterWarningMessage(IntPtr funcPtr);
-
-        [DllImport("EngineRenderer", EntryPoint = "logger_register_info", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("EngineRenderer", EntryPoint = "logger_register_func", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterLogMessage(IntPtr funcPtr);
-
-        [DllImport("EngineRenderer", EntryPoint = "logger_register_debug", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void RegisterDebugMessage(IntPtr funcPtr);
-
-        [DllImport("EngineRenderer", EntryPoint = "logger_register_trace", CallingConvention = CallingConvention.Cdecl)]
-        private static extern void RegisterTraceMessage(IntPtr funcPtr);
 
         #endregion
     }
