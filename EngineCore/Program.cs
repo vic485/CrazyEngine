@@ -5,6 +5,12 @@ using GLFW;
 
 namespace EngineCore
 {
+    public static class Native
+    {
+        [DllImport("EngineRenderer", EntryPoint = "last_error_message", CallingConvention = CallingConvention.Cdecl)]
+        public static extern RustError LastErrorMessage();
+    }
+
     internal static class Program
     {
         private static GlfwWindow _mainWindow;
@@ -15,7 +21,7 @@ namespace EngineCore
 
             TestError();
 
-            RustError err = LastErrorMessage();
+            RustError err = Native.LastErrorMessage();
             RustString message = new RustString(err.message);
             Console.WriteLine(message.AsString());
 
@@ -30,8 +36,5 @@ namespace EngineCore
 
         [DllImport("EngineRenderer", EntryPoint = "error_handling_test", CallingConvention = CallingConvention.Cdecl)]
         private static extern void TestError();
-
-        [DllImport("EngineRenderer", EntryPoint = "last_error_message", CallingConvention = CallingConvention.Cdecl)]
-        private static extern RustError LastErrorMessage();
     }
 }

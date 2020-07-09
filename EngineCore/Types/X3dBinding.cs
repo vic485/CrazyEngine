@@ -6,12 +6,21 @@ namespace EngineCore.Types
     internal class X3DRendererNative {
         #region Dll Imports
 
+        /// Creating/destroying the object
         [DllImport("EngineRenderer.dll", EntryPoint = "x3d_drop_renderer", CallingConvention = CallingConvention.Cdecl)]
         public static extern void CleanupX3DRenderer(IntPtr objPtr);
         [DllImport("EngineRenderer.dll", EntryPoint = "x3d_new_renderer", CallingConvention = CallingConvention.Cdecl)]
         public static extern X3DRendererHandle CreateX3DRenderer(uint width, uint height);
+
+        /// Beginning/ending frame
         [DllImport("EngineRenderer.dll", EntryPoint = "x3d_renderer_prepare_frame", CallingConvention = CallingConvention.Cdecl)]
         public static extern void X3DRendererPrepareFrame(X3DRendererHandle objPtr);
+        [DllImport("EngineRenderer.dll", EntryPoint = "x3d_renderer_finish_frame", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void X3DRendererFinishFrame(X3DRendererHandle objPtr);
+
+        /// Drawing
+        [DllImport("EngineRenderer.dll", EntryPoint = "x3d_renderer_draw_mesh", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void X3DRendererDrawMesh(X3DRendererHandle objPtr, X3DMeshHandle meshPtr);
 
         #endregion
     }
@@ -54,6 +63,16 @@ namespace EngineCore.Types
         public void PrepareFrame()
         {
             X3DRendererNative.X3DRendererPrepareFrame(db);
+        }
+
+        public void FinishFrame()
+        {
+            X3DRendererNative.X3DRendererFinishFrame(db);
+        }
+
+        public void DrawMesh(X3DMesh mesh)
+        {
+            X3DRendererNative.X3DRendererDrawMesh(db, mesh.GetHandle());
         }
 
         public void Dispose()

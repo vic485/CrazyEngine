@@ -47,11 +47,22 @@ namespace EngineCore.Types
         public X3DMesh(X3DRenderer renderer)
         {
             db = X3DMeshNative.CreateX3DMesh(renderer.GetHandle());
+
+            //Check for errors
+            RustError err = Native.LastErrorMessage();
+            RustString message = new RustString(err.message);
+            Console.WriteLine(message.AsString());
+            //Not checking anything right now though :)
         }
 
         public void Dispose()
         {
             db.Dispose();
+        }
+
+        public X3DMeshHandle GetHandle()
+        {
+            return db;
         }
     }
 }

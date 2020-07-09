@@ -13,6 +13,7 @@ namespace EngineCore
         private readonly NativeWindow _window;
 
         private X3DRenderer renderer;
+        private X3DMesh mesh;
 
         public GlfwWindow(int width = 1280, int height = 720, string title = "whaddafrig")
         {
@@ -36,6 +37,11 @@ namespace EngineCore
         public void Update()
         {
             renderer.PrepareFrame();
+
+            renderer.DrawMesh(mesh);
+
+            renderer.FinishFrame();
+
             _window.SwapBuffers();
             Glfw.PollEvents();
         }
@@ -55,7 +61,7 @@ namespace EngineCore
             renderer = new X3DRenderer((uint) _window.ClientSize.Width, (uint) _window.ClientSize.Height);
 
             //Quickly test the mesh
-            X3DMesh mesh = new X3DMesh(renderer);
+            mesh = new X3DMesh(renderer);
         }
 
         private delegate IntPtr RendererDelegate(IntPtr s);
