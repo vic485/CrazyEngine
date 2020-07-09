@@ -6,9 +6,9 @@ namespace EngineCore.Types
     internal class X3DMeshNative {
         #region Dll Imports
 
-        [DllImport("EngineRenderer.dll", EntryPoint = "x3d_drop_mesh", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("EngineRenderer", EntryPoint = "x3d_drop_mesh", CallingConvention = CallingConvention.Cdecl)]
         public static extern void CleanupX3DMesh(IntPtr objPtr);
-        [DllImport("EngineRenderer.dll", EntryPoint = "x3d_new_mesh", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("EngineRenderer", EntryPoint = "x3d_new_mesh", CallingConvention = CallingConvention.Cdecl)]
         public static extern X3DMeshHandle CreateX3DMesh(X3DRendererHandle rendererPtr);
 
         #endregion
