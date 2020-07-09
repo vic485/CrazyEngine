@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using EngineCore.Types;
+using EngineCore.Vfs;
 using GLFW;
 
 namespace EngineCore
@@ -17,6 +18,7 @@ namespace EngineCore
 
         private static void Main(string[] args)
         {
+            FileLoader.TestPath();
             _mainWindow = new GlfwWindow();
 
             TestError();

@@ -11,7 +11,7 @@ namespace EngineCore.Types
     {
         #region Dll Imports
 
-        [DllImport("EngineRenderer.dll", EntryPoint = "string_cleanup", CallingConvention = CallingConvention.Cdecl)]
+        [DllImport("EngineRenderer", EntryPoint = "string_cleanup", CallingConvention = CallingConvention.Cdecl)]
         private static extern void CleanupString(IntPtr stringPtr);
 
         #endregion
