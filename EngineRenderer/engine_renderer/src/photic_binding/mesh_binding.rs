@@ -30,7 +30,7 @@ impl X3DMesh {
         let mesh = match RenderMesh::new(ctx, triangulated, vertices, indices) {
             Ok(mesh) => mesh,
             Err(err) => {
-                println!("Failed to create mesh! {:?}", err);
+                error!("Failed to create mesh! {:?}", err);
                 return Err(format!("{:?}", err));
             },
         };
@@ -44,7 +44,7 @@ impl X3DMesh {
         let mesh = match RenderMesh::TRIANGLE(ctx) {
             Ok(mesh) => mesh,
             Err(err) => {
-                println!("Failed to create mesh! {:?}", err);
+                error!("Failed to create mesh! {:?}", err);
                 return Err(format!("{:?}", err));
             },
         };

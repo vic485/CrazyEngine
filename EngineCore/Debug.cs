@@ -17,7 +17,7 @@ namespace EngineCore
 
             // Setup rust callbacks
             RegisterLogger();
-            
+
             // Log
             RustLogDel del = RustLog;
             var ptr = Marshal.GetFunctionPointerForDelegate(del);
@@ -56,19 +56,19 @@ namespace EngineCore
 
         [DllImport("EngineRenderer", EntryPoint = "register_logger", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterLogger();
-        
+
         [DllImport("EngineRenderer", EntryPoint = "logger_register_error", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterErrorMessage(IntPtr funcPtr);
-        
+
         [DllImport("EngineRenderer", EntryPoint = "logger_register_warn", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterWarningMessage(IntPtr funcPtr);
 
         [DllImport("EngineRenderer", EntryPoint = "logger_register_info", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterLogMessage(IntPtr funcPtr);
-        
+
         [DllImport("EngineRenderer", EntryPoint = "logger_register_debug", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterDebugMessage(IntPtr funcPtr);
-        
+
         [DllImport("EngineRenderer", EntryPoint = "logger_register_trace", CallingConvention = CallingConvention.Cdecl)]
         private static extern void RegisterTraceMessage(IntPtr funcPtr);
 
