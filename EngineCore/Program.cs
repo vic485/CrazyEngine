@@ -19,6 +19,7 @@ namespace EngineCore
         private static void Main(string[] args)
         {
             FileLoader.TestPath();
+            Debug.Log("Opening window");
             _mainWindow = new GlfwWindow();
 
             TestError();
