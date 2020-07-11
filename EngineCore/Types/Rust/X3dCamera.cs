@@ -11,7 +11,7 @@ namespace EngineCore.Types.Rust
         [DllImport("EngineRenderer", EntryPoint = "x3d_new_camera_default", CallingConvention = CallingConvention.Cdecl)]
         public static extern X3DCameraHandle CreateX3DCameraDefault();
         [DllImport("EngineRenderer", EntryPoint = "x3d_new_camera", CallingConvention = CallingConvention.Cdecl)]
-        public static extern X3DCameraHandle CreateX3DCamera(float fovy, float z_near, float z_far, float aperture, float shutter_speed, float iso, Vector3 position); //, Quaternion rotation
+        public static extern X3DCameraHandle CreateX3DCamera(float fovy, float z_near, float z_far, float aperture, float shutter_speed, float iso, RustVector3 position); //, Quaternion rotation
 
         #endregion
     }
@@ -51,7 +51,7 @@ namespace EngineCore.Types.Rust
             db = X3DCameraNative.CreateX3DCameraDefault();
         }
 
-        public X3DCamera(float fovy, float z_near, float z_far, float aperture, float shutter_speed, float iso, Vector3 position) //, Quaternion rotation
+        public X3DCamera(float fovy, float z_near, float z_far, float aperture, float shutter_speed, float iso, RustVector3 position) //, Quaternion rotation
         {
             db = X3DCameraNative.CreateX3DCamera(fovy, z_near, z_far, aperture, shutter_speed, iso, position); //, rotation
         }
