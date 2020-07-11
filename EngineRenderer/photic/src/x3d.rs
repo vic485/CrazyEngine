@@ -75,7 +75,7 @@ impl<'a> Renderer3D<'a> {
         self.lights.push(light);
     }
 
-    pub fn draw_mesh<M: IsMaterial, C: IsCamera>(&mut self, surface: &mut crate::surface::Surface, gl: &glow::Context, camera: C, mesh: &RenderMesh, material: M, model_matrix: Matrix4<f32>) {
+    pub fn draw_mesh<C: IsCamera>(&mut self, surface: &mut crate::surface::Surface, gl: &glow::Context, camera: C, mesh: &RenderMesh, material: &dyn IsMaterial, model_matrix: Matrix4<f32>) {
         let back_buffer = surface.back_buffer().expect("Couldn't get the backbuffer!");
 
         let projection = camera.get_proj(surface.width(), surface.height());

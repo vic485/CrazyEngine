@@ -16,6 +16,7 @@ namespace EngineCore
 
         private X3DCamera cam;
         private X3DMesh mesh;
+        private X3DMaterial material;
 
         // For fps testing
         public void UpdateTitle(string title)
@@ -48,6 +49,7 @@ namespace EngineCore
             renderer.PrepareFrame();
 
             renderer.DrawMesh(mesh, cam);
+            // renderer.DrawMesh(mesh, cam);
 
             renderer.FinishFrame();
 

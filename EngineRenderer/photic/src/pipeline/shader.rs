@@ -47,3 +47,9 @@ impl IsShader for Shader {
         &self.program
     }
 }
+
+impl IsShader for &Shader {
+    fn program(&self) -> &Program<VertexSemantics, (), ShaderInterface> {
+        &self.program
+    }
+}
