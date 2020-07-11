@@ -73,7 +73,6 @@ namespace EngineCore
 
             //Quickly test the mesh
             mesh = new X3DMesh(renderer);
-            // cam = new X3DCamera();
 
             RustVector3 cam_pos = new RustVector3(0.0f, 0.0f, 0.0f);
             cam = new X3DCamera(60f, 0.02f, 100f, 16f, 1f / 100f, 100f, cam_pos);

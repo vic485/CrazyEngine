@@ -20,7 +20,7 @@ namespace EngineCore.Types.Rust
 
         /// Drawing
         [DllImport("EngineRenderer", EntryPoint = "x3d_renderer_draw_mesh", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void X3DRendererDrawMesh(X3DRendererHandle objPtr, X3DMeshHandle meshPtr, X3DCameraHandle camPtr);
+        public static extern void X3DRendererDrawMesh(X3DRendererHandle objPtr, X3DMeshHandle meshPtr, X3DCameraHandle camPtr, X3DMaterialHandle matPtr);
 
         #endregion
     }
@@ -70,9 +70,9 @@ namespace EngineCore.Types.Rust
             X3DRendererNative.X3DRendererFinishFrame(db);
         }
 
-        public void DrawMesh(X3DMesh mesh, X3DCamera cam)
+        public void DrawMesh(X3DMesh mesh, X3DCamera cam, X3DMaterial mat)
         {
-            X3DRendererNative.X3DRendererDrawMesh(db, mesh.GetHandle(), cam.GetHandle());
+            X3DRendererNative.X3DRendererDrawMesh(db, mesh.GetHandle(), cam.GetHandle(), mat.GetHandle());
         }
 
         public void Dispose()
