@@ -26,6 +26,13 @@ namespace EngineCore.Vfs
             using var file = File.OpenRead(path);
             return (T) new BinaryFormatter().Deserialize(file);
         }
+
+        // Quick shader loading for luuk
+        public static string GetShader(string filePath)
+        {
+            var path = Path.Combine(_basePath, filePath);
+            return File.ReadAllText(path);
+        }
         
         // TODO: Test code
         public static void TestPath()
