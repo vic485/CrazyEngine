@@ -15,6 +15,7 @@ namespace EngineCore
     internal static class Program
     {
         private static GlfwWindow _mainWindow;
+        private static DateTime _lastFrame = DateTime.Now;
 
         private static void Main(string[] args)
         {
@@ -30,8 +31,13 @@ namespace EngineCore
 
             while (!_mainWindow.Closed())
             {
+                var currentFrame = DateTime.Now;
+                var deltaTime = (currentFrame - _lastFrame).TotalSeconds;
+                var deltaTimeMs = (currentFrame - _lastFrame).TotalMilliseconds;
+                _mainWindow.UpdateTitle($"Crazy Engine - {deltaTimeMs} ms -- FPS: {1.0 / deltaTime}");
                 // TestRender();
                 _mainWindow.Update();
+                _lastFrame = currentFrame;
             }
 
             _mainWindow.Dispose();

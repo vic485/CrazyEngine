@@ -17,6 +17,12 @@ namespace EngineCore
         private X3DCamera cam;
         private X3DMesh mesh;
 
+        // For fps testing
+        public void UpdateTitle(string title)
+        {
+            _window.Title = title;
+        }
+
         public GlfwWindow(int width = 1280, int height = 720, string title = "whaddafrig")
         {
             if (!Glfw.Init())
@@ -29,6 +35,7 @@ namespace EngineCore
             // TODO: Window hints
             _window = new NativeWindow(width, height, title);
             _window.CenterOnScreen();
+            Glfw.SwapInterval(0);
             Glfw.MakeContextCurrent(_window);
 
             SetupRenderer();

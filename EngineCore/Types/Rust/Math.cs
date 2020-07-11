@@ -25,8 +25,8 @@ namespace EngineCore.Types.Rust
         }
 
         public RustVector2(Vector2 vec) {
-            this.x = vec.x;
-            this.y = vec.y;
+            this.x = vec.X;
+            this.y = vec.Y;
         }
 
         public Vector2 GetNative() {
@@ -56,9 +56,9 @@ namespace EngineCore.Types.Rust
         }
 
         public RustVector3(Vector3 vec) {
-            this.x = vec.x;
-            this.y = vec.y;
-            this.z = vec.z;
+            this.x = vec.X;
+            this.y = vec.Y;
+            this.z = vec.Z;
         }
 
         public Vector3 GetNative() {
@@ -91,10 +91,10 @@ namespace EngineCore.Types.Rust
         }
 
         public RustVector4(Vector4 vec) {
-            this.x = vec.x;
-            this.y = vec.y;
-            this.z = vec.z;
-            this.w = vec.w;
+            this.x = vec.X;
+            this.y = vec.Y;
+            this.z = vec.Z;
+            this.w = vec.W;
         }
 
         public Vector4 GetNative() {
