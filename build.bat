@@ -23,3 +23,5 @@ echo Please wait for the application to start.[0m
 dotnet run
 
 popd
+
+pause

@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
+using AdvancedDLSupport;
+using EngineCore.Interfaces;
 
 namespace EngineCore.Types.Rust
 {
@@ -30,7 +32,10 @@ namespace EngineCore.Types.Rust
         {
             if (!this.IsInvalid)
             {
-                X3DShaderNative.CleanupX3DShader(handle);
+                var NativeLibraryBuilder = new NativeLibraryBuilder();
+                IX3DNative library = NativeLibraryBuilder.Default.ActivateInterface<IX3DNative>("EngineRenderer");
+
+                library.x3d_drop_shader(handle);
             }
 
             return true;
