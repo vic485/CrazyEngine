@@ -11,7 +11,7 @@ namespace EngineCore.Vfs
         static FileLoader()
         {
             _basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data");
-            
+
             // TODO: Only needed now for testing builds
             if (!Directory.Exists(_basePath))
             {
@@ -19,7 +19,7 @@ namespace EngineCore.Vfs
                 Directory.CreateDirectory(_basePath);
             }
         }
-        
+
         public static T GetData<T>(string filePath) //where T : new()
         {
             var path = Path.Combine(_basePath, filePath);
@@ -28,12 +28,13 @@ namespace EngineCore.Vfs
         }
 
         // Quick shader loading for luuk
+        // thanks <3
         public static string GetShader(string filePath)
         {
             var path = Path.Combine(_basePath, filePath);
             return File.ReadAllText(path);
         }
-        
+
         // TODO: Test code
         public static void TestPath()
         {

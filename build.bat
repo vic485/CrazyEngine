@@ -11,9 +11,10 @@ echo [36mRenderer built!
 
 popd
 
-echo Copying renderer...
+echo Copying renderer and related files...
 xcopy /y EngineRenderer\target\release\engine_renderer.dll EngineCore\EngineRenderer.dll
-echo Renderer copied!
+xcopy /y /i EngineRenderer\shaders\* EngineCore\bin\Debug\netcoreapp5.0\Data\shaders\
+echo Files copied!
 
 pushd EngineCore
 

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 using EngineCore.Types.Rust;
+using EngineCore.Vfs;
 using GLFW;
 
 namespace EngineCore
@@ -48,7 +49,7 @@ namespace EngineCore
         {
             renderer.PrepareFrame();
 
-            renderer.DrawMesh(mesh, cam);
+            renderer.DrawMesh(cam, mesh, material);
             // renderer.DrawMesh(mesh, cam);
 
             renderer.FinishFrame();
@@ -76,6 +77,11 @@ namespace EngineCore
 
             RustVector3 cam_pos = new RustVector3(0.0f, 0.0f, 0.0f);
             cam = new X3DCamera(60f, 0.02f, 100f, 16f, 1f / 100f, 100f, cam_pos);
+
+            string vs = FileLoader.GetShader("shaders/vertex.glsl");
+            string fs = FileLoader.GetShader("shaders/fragment.glsl");
+            X3DShader shader = new X3DShader(vs, null, null, fs);
+            material = new X3DMaterial(shader);
         }
 
         private delegate IntPtr RendererDelegate(IntPtr s);
