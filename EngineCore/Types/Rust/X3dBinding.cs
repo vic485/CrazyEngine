@@ -1,5 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
+using EngineCore.Interfaces;
+using AdvancedDLSupport;
 
 namespace EngineCore.Types.Rust
 {
@@ -41,7 +43,12 @@ namespace EngineCore.Types.Rust
         {
             if (!this.IsInvalid)
             {
-                X3DRendererNative.CleanupX3DRenderer(handle);
+                var NativeLibraryBuilder = new NativeLibraryBuilder();
+                IX3DNative library = NativeLibraryBuilder.Default.ActivateInterface<IX3DNative>("EngineRenderer");
+                
+                    library.x3d_drop_renderer(ref handle);
+                
+                // X3DRendererNative.CleanupX3DRenderer(handle);
             }
 
             return true;
@@ -55,24 +62,29 @@ namespace EngineCore.Types.Rust
     {
         private X3DRendererHandle db;
 
+        private NativeLibraryBuilder nativeLibrary = new NativeLibraryBuilder();
+        private IX3DNative library;
+
         public X3DRenderer(uint width, uint height)
         {
-            db = X3DRendererNative.CreateX3DRenderer(width, height);
+            library = nativeLibrary.ActivateInterface<IX3DNative>("EngineRenderer");
+
+            db = library.x3d_new_renderer(width, height);     
         }
 
         public void PrepareFrame()
         {
-            X3DRendererNative.X3DRendererPrepareFrame(db);
+            library.x3d_renderer_prepare_frame(db);
         }
 
         public void FinishFrame()
         {
-            X3DRendererNative.X3DRendererFinishFrame(db);
+            library.x3d_renderer_finish_frame(db);
         }
 
         public void DrawMesh(X3DCamera cam, X3DMesh mesh, X3DMaterial mat)
         {
-            X3DRendererNative.X3DRendererDrawMesh(db, cam.GetHandle(), mesh.GetHandle(), mat.GetHandle());
+            library.x3d_renderer_draw_mesh(db, cam.GetHandle(), mesh.GetHandle(), mat.GetHandle());
         }
 
         public void Dispose()
