@@ -43,10 +43,12 @@ namespace EngineCore.Types.Rust
     public class X3DMaterial : IDisposable
     {
         private X3DMaterialHandle db;
+        public X3DShader shader;
 
         public X3DMaterial(X3DShader shader)
         {
             db = X3DMaterialNative.CreateX3DMaterial(shader.GetHandle());
+            this.shader = shader;
         }
 
         public void Dispose()
