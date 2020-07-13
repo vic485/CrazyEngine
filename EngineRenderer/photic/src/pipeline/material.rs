@@ -68,6 +68,31 @@ impl<'a> IsMaterial for Material<'a> {
     }
 }
 
+impl<'a> IsMaterial for &Material<'a> {
+    fn upload_fields(&self, gl: &glow::Context) {
+        let handle = self.shader.program().deref().handle();
+
+        unsafe {
+            let albedo_loc = gl.get_uniform_location(handle, "material.albedo");
+            gl.uniform_4_f32(albedo_loc, self.albedo[0], self.albedo[1], self.albedo[2], self.albedo[3]);
+
+            let metalness_loc = gl.get_uniform_location(handle, "material.metalness");
+            gl.uniform_1_f32(metalness_loc, self.metalness);
+
+            let roughness_loc = gl.get_uniform_location(handle, "material.roughness");
+            gl.uniform_1_f32(roughness_loc, self.roughness);
+        }
+    }
+
+    fn bind_texture(&self, gl: &glow::Context) {
+        unsafe { gl.bind_texture(glow::TEXTURE_2D, Some(self.main_texture.gl_texture)); }
+    }
+
+    fn program(&self) -> &Program<VertexSemantics, (), ShaderInterface> {
+        &self.shader.program()
+    }
+}
+
 pub struct Material2<'a> {
     pub shader: Box<&'a dyn IsShader>,
 
