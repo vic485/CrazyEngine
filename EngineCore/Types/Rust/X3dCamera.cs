@@ -1,21 +1,10 @@
 using System;
 using System.Runtime.InteropServices;
+using EngineCore.Interfaces;
+using AdvancedDLSupport;
 
 namespace EngineCore.Types.Rust
 {
-    internal class X3DCameraNative {
-        #region Dll Imports
-
-        [DllImport("EngineRenderer", EntryPoint = "x3d_drop_camera", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void CleanupX3DCamera(IntPtr objPtr);
-        [DllImport("EngineRenderer", EntryPoint = "x3d_new_camera_default", CallingConvention = CallingConvention.Cdecl)]
-        public static extern X3DCameraHandle CreateX3DCameraDefault();
-        [DllImport("EngineRenderer", EntryPoint = "x3d_new_camera", CallingConvention = CallingConvention.Cdecl)]
-        public static extern X3DCameraHandle CreateX3DCamera(float fovy, float z_near, float z_far, float aperture, float shutter_speed, float iso, RustVector3 position); //, Quaternion rotation
-
-        #endregion
-    }
-
     /// <summary>
     /// A handle to the raw rust mesh object sent through FFI
     /// </summary>
@@ -32,7 +21,11 @@ namespace EngineCore.Types.Rust
         {
             if (!this.IsInvalid)
             {
-                X3DCameraNative.CleanupX3DCamera(handle);
+                var NativeLibraryBuilder = new NativeLibraryBuilder();
+                IX3DNative library = NativeLibraryBuilder.Default.ActivateInterface<IX3DNative>("EngineRenderer");
+
+                // X3DCameraNative.CleanupX3DCamera(handle);
+                library.x3d_drop_camera(ref handle);
             }
 
             return true;
@@ -46,14 +39,21 @@ namespace EngineCore.Types.Rust
     {
         private X3DCameraHandle db;
 
+        private NativeLibraryBuilder nativeLibrary = new NativeLibraryBuilder();
+        private IX3DNative library;
+
         public X3DCamera()
         {
-            db = X3DCameraNative.CreateX3DCameraDefault();
+            library = nativeLibrary.ActivateInterface<IX3DNative>("EngineRenderer");
+
+            db = library.x3d_new_camera_default();
         }
 
         public X3DCamera(float fovy, float z_near, float z_far, float aperture, float shutter_speed, float iso, RustVector3 position) //, Quaternion rotation
         {
-            db = X3DCameraNative.CreateX3DCamera(fovy, z_near, z_far, aperture, shutter_speed, iso, position); //, rotation
+            library = nativeLibrary.ActivateInterface<IX3DNative>("EngineRenderer");
+
+            db = library.x3d_new_camera(fovy, z_near, z_far, aperture, shutter_speed, iso, position); //, rotation
         }
 
         public void Dispose()

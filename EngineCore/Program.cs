@@ -2,6 +2,8 @@
 using System.Runtime.InteropServices;
 using EngineCore.Types.Rust;
 using EngineCore.Vfs;
+using EngineCore.Interfaces;
+using AdvancedDLSupport;
 using GLFW;
 
 namespace EngineCore
@@ -17,15 +19,20 @@ namespace EngineCore
         private static GlfwWindow _mainWindow;
         private static DateTime _lastFrame = DateTime.Now;
 
+        private static NativeLibraryBuilder nativeLibrary = new NativeLibraryBuilder();
+        private static IX3DNative library;
+
         private static void Main(string[] args)
         {
+            library = nativeLibrary.ActivateInterface<IX3DNative>("EngineRenderer");
+
             FileLoader.TestPath();
             Debug.Log("Opening window");
             _mainWindow = new GlfwWindow();
 
             TestError();
 
-            RustError err = Native.LastErrorMessage();
+            RustError err = library.last_error_message();
             RustString message = new RustString(err.message);
             Console.WriteLine(message.AsString());
 

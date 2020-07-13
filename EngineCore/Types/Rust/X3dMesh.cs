@@ -1,19 +1,10 @@
 using System;
 using System.Runtime.InteropServices;
+using EngineCore.Interfaces;
+using AdvancedDLSupport;
 
 namespace EngineCore.Types.Rust
 {
-    internal class X3DMeshNative {
-        #region Dll Imports
-
-        [DllImport("EngineRenderer", EntryPoint = "x3d_drop_mesh", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void CleanupX3DMesh(IntPtr objPtr);
-        [DllImport("EngineRenderer", EntryPoint = "x3d_new_mesh", CallingConvention = CallingConvention.Cdecl)]
-        public static extern X3DMeshHandle CreateX3DMesh(X3DRendererHandle rendererPtr);
-
-        #endregion
-    }
-
     /// <summary>
     /// A handle to the raw rust mesh object sent through FFI
     /// </summary>
@@ -30,7 +21,12 @@ namespace EngineCore.Types.Rust
         {
             if (!this.IsInvalid)
             {
-                X3DMeshNative.CleanupX3DMesh(handle);
+                var NativeLibraryBuilder = new NativeLibraryBuilder();
+                IX3DNative library = NativeLibraryBuilder.Default.ActivateInterface<IX3DNative>("EngineRenderer");
+
+                library.x3d_drop_mesh(ref handle);
+
+                // X3DMeshNative.CleanupX3DMesh(handle);
             }
 
             return true;
@@ -44,12 +40,19 @@ namespace EngineCore.Types.Rust
     {
         private X3DMeshHandle db;
 
+        private NativeLibraryBuilder nativeLibrary = new NativeLibraryBuilder();
+        private IX3DNative library;
+
         public X3DMesh(X3DRenderer renderer)
         {
-            db = X3DMeshNative.CreateX3DMesh(renderer.GetHandle());
+            library = nativeLibrary.ActivateInterface<IX3DNative>("EngineRenderer");
+
+            db = library.x3d_new_mesh();
+
+            // db = X3DMeshNative.CreateX3DMesh(renderer.GetHandle());
 
             //Check for errors
-            RustError err = Native.LastErrorMessage();
+            RustError err = library.last_error_message();
             RustString message = new RustString(err.message);
             Console.WriteLine(message.AsString());
             //Not checking anything right now though :)

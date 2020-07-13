@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="AdvancedDLSupport" Version="3.2.0" />
+    <PackageReference Include="CjClutter.ObjLoader" Version="1.0.0" />
     <PackageReference Include="glfw-net" Version="3.3.1" />
   </ItemGroup>
 

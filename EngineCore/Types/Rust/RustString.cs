@@ -11,6 +11,9 @@ namespace EngineCore.Types.Rust
     {
         #region Dll Imports
 
+        //TODO: Add this to the interface and use this.
+        //      Not done yet, as it probably will not be called much
+        //      so there isn't a big performance difference.
         [DllImport("EngineRenderer", EntryPoint = "string_cleanup", CallingConvention = CallingConvention.Cdecl)]
         private static extern void CleanupString(IntPtr stringPtr);
 

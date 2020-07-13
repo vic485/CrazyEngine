@@ -5,17 +5,6 @@ using EngineCore.Interfaces;
 
 namespace EngineCore.Types.Rust
 {
-    internal class X3DShaderNative {
-        #region Dll Imports
-
-        [DllImport("EngineRenderer", EntryPoint = "x3d_drop_shader", CallingConvention = CallingConvention.Cdecl)]
-        public static extern void CleanupX3DShader(IntPtr objPtr);
-        [DllImport("EngineRenderer", EntryPoint = "x3d_new_shader", CallingConvention = CallingConvention.Cdecl)]
-        public static extern X3DShaderHandle CreateX3DShader(string vs, string gs, string ts, string fs);
-
-        #endregion
-    }
-
     /// <summary>
     /// A handle to the raw rust shader object sent through FFI
     /// </summary>
@@ -49,12 +38,19 @@ namespace EngineCore.Types.Rust
     {
         private X3DShaderHandle db;
 
+        private NativeLibraryBuilder nativeLibrary = new NativeLibraryBuilder();
+        private IX3DNative library;
+
         public X3DShader(string vs, string gs, string ts, string fs)
         {
-            db = X3DShaderNative.CreateX3DShader(vs, gs, ts, fs);
+            library = nativeLibrary.ActivateInterface<IX3DNative>("EngineRenderer");
+
+            db = library.x3d_new_shader(vs, gs, ts, fs);
+
+            // db = X3DShaderNative.CreateX3DShader(vs, gs, ts, fs);
 
             //Check for errors
-            RustError err = Native.LastErrorMessage();
+            RustError err = library.last_error_message();
             RustString message = new RustString(err.message);
             Console.WriteLine(message.AsString());
             //Not checking anything right now though :)
